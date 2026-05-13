@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
+import logoMark from "@/assets/namaste-nima-logo.png";
 import heroCurry from "@/assets/hero-curry.jpg";
 import serviceEvent from "@/assets/service-event.jpg";
 import servicePrivate from "@/assets/service-private-chef.jpg";
@@ -26,132 +27,474 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-type Allergen = "Vegan" | "Gluten Free" | "Contains Milk" | "Contains Wheat" | "Contains Sesame" | "Contains Nuts";
+const INSTAGRAM_URL = "https://www.instagram.com/namastenimauk/";
 
-const ALLERGEN_STYLES: Record<Allergen, string> = {
-  "Vegan": "border-olive/30 text-olive",
-  "Gluten Free": "border-olive/30 text-olive",
-  "Contains Milk": "border-charcoal/15 text-charcoal/55",
-  "Contains Wheat": "border-charcoal/15 text-charcoal/55",
-  "Contains Sesame": "border-charcoal/15 text-charcoal/55",
-  "Contains Nuts": "border-charcoal/15 text-charcoal/55",
-};
+const PROFILE_SIGNALS = [
+  "Based in the North East",
+  "Party and event catering",
+  "Private chef experiences",
+  "Healthy meal plans",
+  "Vegan options",
+  "Freezer curries",
+  "Cookery lessons",
+  "5-star hygiene",
+] as const;
 
-type Dish = {
-  name: string;
-  blurb: string;
-  image: string;
-  allergens: Allergen[];
-  ingredients: string[];
-};
-
-const DISHES: Dish[] = [
+const OFFERINGS = [
   {
-    name: "Aloo Tikki",
-    blurb: "Crispy spiced potato medallions, tamarind glaze, pomegranate pearls.",
+    id: "events",
+    title: "Party and Event Catering",
+    summary:
+      "Feasts with colour, warmth and proper hospitality for birthdays, weddings, pop-ups and celebrations.",
+    details:
+      "Build a menu around street-food favourites, sharing trays and crowd-pleasing mains, with service shaped to your venue and guest flow.",
+    image: serviceEvent,
+    accent: "Large gatherings",
+  },
+  {
+    id: "private-chef",
+    title: "Private Chef",
+    summary:
+      "An at-home experience that brings the pace, aromas and theatre of a live kitchen into your evening.",
+    details:
+      "Ideal for intimate dinners, milestone birthdays and smaller occasions where you want restaurant-level care without leaving home.",
+    image: servicePrivate,
+    accent: "Hosted at home",
+  },
+  {
+    id: "meal-plans",
+    title: "Healthy Meal Plans",
+    summary:
+      "Balanced weekday meals built around bold spice, comfort and practical prep for busy schedules.",
+    details:
+      "Expect flavour-forward bowls, lighter curries and thoughtful vegetarian or vegan choices that still feel generous and satisfying.",
+    image: serviceHealthy,
+    accent: "Weekly rhythm",
+  },
+  {
+    id: "freezer-curries",
+    title: "Freezer Curries",
+    summary:
+      "Slow-cooked staples prepared in batches so you can keep proper, home-style food close at hand.",
+    details:
+      "A flexible option for households that want quick dinners without losing the depth and comfort of a long-cooked dish.",
+    image: serviceFreezer,
+    accent: "Ready when you are",
+  },
+  {
+    id: "vegan",
+    title: "Vegan Menus",
+    summary: "Plant-led dishes with the same richness, colour and texture as the rest of the menu.",
+    details:
+      "From chana and saag to street-food snacks and vibrant sides, vegan offerings are treated as headline dishes, not add-ons.",
+    image: serviceVegan,
+    accent: "Plant-forward",
+  },
+  {
+    id: "lessons",
+    title: "Cookery Lessons",
+    summary:
+      "Hands-on sessions for people who want to learn the building blocks behind the food they love.",
+    details:
+      "A chance to unpack spice layering, prep habits and family-style techniques in a way that feels welcoming rather than formal.",
+    image: aboutHands,
+    accent: "Learn the method",
+  },
+] as const;
+
+const FEATURE_CARDS = [
+  {
+    title: "Family-style flavour",
+    text: "Menus are written around food that feels generous, comforting and full of character rather than overly polished for its own sake.",
+  },
+  {
+    title: "Built for mixed diets",
+    text: "Vegan-friendly dishes and flexible menu planning are part of the core offer, making it easier to feed a mixed table well.",
+  },
+  {
+    title: "North East rooted",
+    text: "The tone is warm and local, with services suited to homes, events and community gatherings across the North East.",
+  },
+] as const;
+
+const MENU_HIGHLIGHTS = [
+  {
+    name: "Aloo Tikki Chaat",
+    note: "Crisp potato, tangy chutney, cooling yogurt and herbs for a lively welcome bite.",
     image: dishAlooTikki,
-    allergens: ["Vegan", "Gluten Free"],
-    ingredients: ["Heritage potatoes", "Fresh ginger", "Green chili", "Cumin seed", "Tamarind", "Mint", "Himalayan salt"],
   },
   {
     name: "Medu Vada",
-    blurb: "South Indian lentil donuts, coconut chutney and tempered sambar.",
+    note: "Golden lentil fritters with chutney and warmth from black pepper, mustard seed and curry leaf.",
     image: dishMeduVada,
-    allergens: ["Vegan", "Gluten Free"],
-    ingredients: ["Urad dal", "Curry leaves", "Black pepper", "Asafoetida", "Coconut", "Mustard seed"],
   },
   {
     name: "Charcoal Chicken Tikka",
-    blurb: "Slow-marinated chicken in Kashmiri chili and hung curd, charcoal-finished.",
+    note: "A deeper, smokier option for parties where guests want something rich and celebratory.",
     image: dishChickenTikka,
-    allergens: ["Contains Milk", "Gluten Free"],
-    ingredients: ["Free-range chicken", "Greek yogurt", "Kashmiri chili", "Garam masala", "Mustard oil", "Lemon"],
   },
   {
-    name: "Smoked Chana Curry",
-    blurb: "Chickpeas in a slow-cooked tomato base, finished with hand-blended garam masala.",
+    name: "Slow Chana Curry",
+    note: "A dependable vegan centrepiece with body, spice and comfort for buffets or meal plans.",
     image: dishChana,
-    allergens: ["Vegan", "Gluten Free"],
-    ingredients: ["Kabuli chickpeas", "Vine tomatoes", "Red onion", "Ginger-garlic", "Coriander stem", "Cassia bark"],
   },
   {
     name: "Saag Aloo",
-    blurb: "Wilted spinach folded with roasted heritage potato and cumin temper.",
+    note: "Greens and soft potato cooked until glossy, earthy and deeply savoury.",
     image: dishSaag,
-    allergens: ["Vegan", "Gluten Free"],
-    ingredients: ["Organic spinach", "Maris piper potato", "Cumin", "Garlic", "Green chili", "Cold-pressed oil"],
   },
   {
-    name: "Hand-Folded Samosa",
-    blurb: "Flaky pastry parcels, spiced potato and pea, served with date chutney.",
+    name: "Hand-folded Samosa",
+    note: "Crisp pastry, spiced filling and the kind of snack that disappears quickly at any gathering.",
     image: dishSamosa,
-    allergens: ["Contains Wheat", "Contains Sesame"],
-    ingredients: ["Wheat pastry", "Potato", "Garden peas", "Black mustard", "Sesame", "Date jaggery"],
   },
   {
     name: "Heritage Dahl",
-    blurb: "Twenty-four hour slow-cooked black lentils, finished with cultured butter.",
+    note: "A comforting, slow-cooked pot made for colder evenings, larger trays and repeat orders.",
     image: dishDahl,
-    allergens: ["Contains Milk", "Gluten Free"],
-    ingredients: ["Urad dal", "Vine tomato", "Ginger", "Cultured butter", "Smoked paprika", "Coriander"],
   },
-];
+] as const;
 
-const SERVICES = [
-  { title: "Event Catering", blurb: "Weddings and celebrations of up to 200 guests, served with grace.", image: serviceEvent, eyebrow: "01" },
-  { title: "Private Chef Experiences", blurb: "An intimate journey through regional flavours, prepared in your home.", image: servicePrivate, eyebrow: "02" },
-  { title: "Healthy Meal Plans", blurb: "Nutrient-dense Indian bowls designed for the modern weekday.", image: serviceHealthy, eyebrow: "03" },
-  { title: "Vegan Catering", blurb: "Plant-forward menus that never compromise on depth of flavour.", image: serviceVegan, eyebrow: "04" },
-  { title: "Freezer Curries", blurb: "Slow-cooked, gently packed and delivered, ready when you are.", image: serviceFreezer, eyebrow: "05" },
-  { title: "Corporate Catering", blurb: "Considered menus for office gatherings, launches and away days.", image: serviceCorporate, eyebrow: "06" },
-];
-
-const GALLERY: { src: string; cat: GalleryCat; aspect: string }[] = [
-  { src: galleryWedding, cat: "Weddings", aspect: "aspect-[4/5]" },
-  { src: galleryPrivate, cat: "Private Events", aspect: "aspect-square" },
-  { src: galleryHome, cat: "Home Dining", aspect: "aspect-[4/3]" },
-  { src: serviceCorporate, cat: "Corporate Catering", aspect: "aspect-[3/4]" },
-  { src: galleryStreet, cat: "Street Food", aspect: "aspect-[4/5]" },
-  { src: serviceHealthy, cat: "Healthy Meals", aspect: "aspect-square" },
-  { src: dishChickenTikka, cat: "Private Events", aspect: "aspect-[4/3]" },
-  { src: dishSamosa, cat: "Street Food", aspect: "aspect-square" },
-  { src: dishDahl, cat: "Home Dining", aspect: "aspect-[3/4]" },
-];
-
-type GalleryCat = "Weddings" | "Private Events" | "Home Dining" | "Corporate Catering" | "Street Food" | "Healthy Meals";
-const CATEGORIES: ("All" | GalleryCat)[] = ["All", "Weddings", "Private Events", "Home Dining", "Corporate Catering", "Street Food", "Healthy Meals"];
-
-const TESTIMONIALS = [
+const GALLERY = [
   {
-    quote: "Namaste Nima brought our wedding to life. Every guest spoke about the food for weeks — it tasted like a memory of home.",
-    name: "Priya & James",
-    event: "Wedding · 140 guests · Cotswolds",
+    title: "Wedding and celebration tables",
+    text: "Long-table warmth, layered serving platters and food designed to bring the room together.",
+    image: galleryWedding,
   },
   {
-    quote: "An evening of quiet luxury. The chef arrived, the kitchen filled with scent, and our table was transformed.",
-    name: "The Mehta Family",
-    event: "Private Dining · London",
+    title: "Private dinners at home",
+    text: "A more intimate setup where the details matter just as much as the cooking.",
+    image: galleryPrivate,
   },
   {
-    quote: "Easily the best catering we've had at the office. Considered, beautiful, and genuinely delicious.",
-    name: "Lena Holt, Studio Director",
-    event: "Corporate Lunch · Shoreditch",
+    title: "Street-food energy",
+    text: "Bright snacks, bold colour and a more casual pace for markets, pop-ups and lively parties.",
+    image: galleryStreet,
   },
-];
+  {
+    title: "Everyday meal planning",
+    text: "Food that still feels abundant even when it is built for your weekday routine.",
+    image: galleryHome,
+  },
+] as const;
+
+const PROCESS = [
+  {
+    step: "01",
+    title: "Tell us the occasion",
+    text: "Share your date, guest count, postcode and the kind of atmosphere you want to create.",
+  },
+  {
+    step: "02",
+    title: "Shape the menu",
+    text: "Choose a direction that fits your guests, from event trays and private chef dinners to weekly meal prep.",
+  },
+  {
+    step: "03",
+    title: "Host with confidence",
+    text: "Service, timing and food presentation are then tuned to the format so the event feels easy on the day.",
+  },
+] as const;
 
 function Home() {
+  const [activeId, setActiveId] = useState(OFFERINGS[0].id);
+  const activeOffering = OFFERINGS.find((item) => item.id === activeId) ?? OFFERINGS[0];
+
   return (
-    <main className="bg-ivory text-charcoal font-sans overflow-x-hidden">
+    <main className="nn-site min-h-screen overflow-x-hidden bg-background text-foreground">
       <Nav />
       <Hero />
-      <Marquee />
-      <Services />
-      <SignatureDishes />
-      <Story />
-      <Gallery />
-      <Testimonials />
-      <Instagram />
-      <Enquiry />
+      <SignalBar />
+      <section id="formats" className="nn-section">
+        <div className="nn-shell">
+          <SectionIntro
+            kicker="What the profile points to"
+            title="A homepage shaped around the real service mix."
+            body="The public Instagram metadata points clearly to North East-based catering, private chef work, healthy meal plans, vegan options, freezer curries and cookery lessons. The redesign leans into that broader studio offer."
+          />
+
+          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="space-y-3">
+              {OFFERINGS.map((offering) => {
+                const isActive = offering.id === activeId;
+                return (
+                  <button
+                    key={offering.id}
+                    type="button"
+                    onClick={() => setActiveId(offering.id)}
+                    className={`nn-offering-tab ${isActive ? "nn-offering-tab-active" : ""}`}
+                  >
+                    <span className="block text-left">
+                      <span className="block font-serif text-2xl leading-tight md:text-[2rem]">
+                        {offering.title}
+                      </span>
+                      <span className="mt-2 block max-w-xl text-sm leading-6 text-foreground/72">
+                        {offering.summary}
+                      </span>
+                    </span>
+                    <span className="nn-accent-chip">{offering.accent}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <article className="nn-feature-panel">
+              <div className="relative overflow-hidden rounded-[2rem]">
+                <img
+                  src={activeOffering.image}
+                  alt={activeOffering.title}
+                  className="h-[420px] w-full object-cover md:h-[520px]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-oxblood-900/88 via-oxblood-900/14 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                  <div className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[0.64rem] uppercase tracking-[0.32em] text-white/88 backdrop-blur">
+                    {activeOffering.accent}
+                  </div>
+                  <h3 className="max-w-lg font-serif text-3xl leading-tight text-white md:text-5xl">
+                    {activeOffering.title}
+                  </h3>
+                  <p className="mt-4 max-w-xl text-sm leading-6 text-white/80 md:text-base">
+                    {activeOffering.details}
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="nn-section pt-0">
+        <div className="nn-shell grid gap-5 md:grid-cols-3">
+          {FEATURE_CARDS.map((card) => (
+            <article key={card.title} className="nn-quiet-card">
+              <h3 className="font-serif text-[1.75rem] leading-tight">{card.title}</h3>
+              <p className="mt-4 text-sm leading-6 text-foreground/72">{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="menu" className="nn-section nn-section-dark">
+        <div className="nn-shell">
+          <SectionIntro
+            kicker="Menu language"
+            title="Comfort-led dishes with enough depth for both parties and weeknights."
+            body="Rather than writing in the language of fine dining, this homepage keeps the tone closer to what the public profile suggests: vibrant food, practical formats and a mix of celebratory and everyday offerings."
+            inverse
+          />
+
+          <div className="nn-menu-grid">
+            <article className="nn-menu-story">
+              <img
+                src={heroCurry}
+                alt="A richly spiced curry served in a copper pot"
+                className="h-full min-h-[420px] w-full object-cover"
+              />
+              <div className="nn-menu-story-copy">
+                <p className="text-[0.7rem] uppercase tracking-[0.34em] text-saffron-200/80">
+                  Menu direction
+                </p>
+                <h3 className="mt-3 font-serif text-3xl leading-tight text-white md:text-5xl">
+                  Rich sauces, bright garnishes and food designed to feel shared.
+                </h3>
+                <p className="mt-5 max-w-lg text-sm leading-6 text-white/78 md:text-base">
+                  The written content now prioritises warmth, abundance and recognisable home-style
+                  dishes, while still feeling elevated enough for events, private chef evenings and
+                  styled catering setups.
+                </p>
+              </div>
+            </article>
+
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {MENU_HIGHLIGHTS.map((dish) => (
+                <article key={dish.name} className="nn-menu-card">
+                  <img src={dish.image} alt={dish.name} className="h-52 w-full object-cover" />
+                  <div className="p-5">
+                    <h3 className="font-serif text-2xl leading-tight text-oxblood-950">
+                      {dish.name}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-foreground/72">{dish.note}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="story" className="nn-section">
+        <div className="nn-shell grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative overflow-hidden rounded-[2rem] bg-muted">
+            <img
+              src={aboutPortrait}
+              alt="Portrait connected to the Namaste Nima kitchen story"
+              className="h-full min-h-[560px] w-full object-cover"
+            />
+            <div className="absolute bottom-5 right-5 hidden w-44 overflow-hidden rounded-[1.4rem] border border-white/55 shadow-2xl md:block">
+              <img
+                src={aboutHands}
+                alt="Hands shaping dough"
+                className="h-56 w-full object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center">
+            <div className="nn-kicker">Story and tone</div>
+            <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[0.98] tracking-tight text-oxblood-950 md:text-6xl">
+              Rooted in the North East, written to feel generous and close to home.
+            </h2>
+            <div className="mt-8 space-y-5 text-base leading-8 text-foreground/76">
+              <p>
+                The rewritten homepage moves away from anonymous luxury-catering language and closer
+                to the profile’s public identity: a warm, regional food business offering party
+                catering, private chef work, weekly meals, vegan options and cooking-led
+                experiences.
+              </p>
+              <p>
+                Visually, the logo’s deep red and gold become the foundation for the full system,
+                giving the homepage a more memorable ceremonial mood without losing usability on
+                mobile.
+              </p>
+              <p>
+                Copy is intentionally practical as well as atmospheric, because the service list
+                suggests a brand that balances celebration with repeat, real-life ordering.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery" className="nn-section bg-sand-100/80">
+        <div className="nn-shell">
+          <SectionIntro
+            kicker="Visual rhythm"
+            title="A gallery that can be swapped to real Instagram media later."
+            body="Instagram only exposes the profile photo publicly in this environment, so the page uses the repo’s existing food and catering imagery while keeping the gallery and social section ready for real post assets."
+          />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {GALLERY.map((item, index) => (
+              <article
+                key={item.title}
+                className={`nn-gallery-card ${index === 0 ? "md:row-span-2" : ""}`}
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className={`w-full object-cover ${index === 0 ? "h-full min-h-[540px]" : "h-[260px] md:h-[300px]"}`}
+                />
+                <div className="nn-gallery-copy">
+                  <h3 className="font-serif text-3xl leading-tight text-white">{item.title}</h3>
+                  <p className="mt-3 max-w-md text-sm leading-6 text-white/80">{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="nn-section">
+        <div className="nn-shell">
+          <SectionIntro
+            kicker="How booking feels"
+            title="Simple steps, clear menu shaping and less stress on the day."
+            body="The homepage now emphasises clarity and trust rather than filler sections, with a lightweight process that fits both event clients and repeat meal customers."
+          />
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {PROCESS.map((item) => (
+              <article key={item.step} className="nn-process-card">
+                <div className="text-[0.72rem] uppercase tracking-[0.34em] text-saffron-600">
+                  {item.step}
+                </div>
+                <h3 className="mt-5 font-serif text-[2rem] leading-tight text-oxblood-950">
+                  {item.title}
+                </h3>
+                <p className="mt-4 text-sm leading-6 text-foreground/72">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" className="nn-section nn-section-dark">
+        <div className="nn-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <div className="nn-kicker nn-kicker-inverse">Get in touch</div>
+            <h2 className="mt-4 font-serif text-4xl leading-[0.98] tracking-tight text-white md:text-6xl">
+              Tell Namaste Nima what you are planning.
+            </h2>
+            <p className="mt-6 max-w-xl text-base leading-8 text-white/75">
+              For now, the strongest verified public contact point is Instagram, so the redesigned
+              homepage makes that route prominent and uses the form as a clean enquiry starter.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="nn-button nn-button-light"
+              >
+                Open Instagram
+              </a>
+              <a href="#formats" className="nn-button nn-button-outline-light">
+                Review services
+              </a>
+            </div>
+          </div>
+
+          <form className="nn-form-panel" onSubmit={(event) => event.preventDefault()}>
+            <div className="grid gap-5 md:grid-cols-2">
+              <Field label="Service">
+                <select className="nn-input" defaultValue="Party and event catering">
+                  <option>Party and event catering</option>
+                  <option>Private chef</option>
+                  <option>Healthy meal plan</option>
+                  <option>Vegan menu</option>
+                  <option>Freezer curries</option>
+                  <option>Cookery lessons</option>
+                </select>
+              </Field>
+              <Field label="Guest count">
+                <input className="nn-input" type="text" placeholder="e.g. 20 guests" />
+              </Field>
+              <Field label="Location">
+                <input className="nn-input" type="text" placeholder="Town or postcode" />
+              </Field>
+              <Field label="Date">
+                <input className="nn-input" type="date" />
+              </Field>
+              <Field label="What are you planning?" className="md:col-span-2">
+                <textarea
+                  className="nn-input min-h-36 resize-none"
+                  placeholder="Tell us about the occasion, menu ideas, dietary needs and the kind of atmosphere you want."
+                />
+              </Field>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-4 border-t border-white/12 pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm leading-6 text-white/60">
+                Prefer a DM? The public profile is available at{" "}
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-white/30 underline-offset-4"
+                >
+                  @namastenimauk
+                </a>
+                .
+              </p>
+              <button type="submit" className="nn-button nn-button-light">
+                Draft enquiry
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
       <Footer />
     </main>
   );
@@ -159,412 +502,196 @@ function Home() {
 
 function Nav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-5 flex justify-between items-center mix-blend-difference text-ivory">
-      <a href="#top" className="font-serif text-xl md:text-2xl tracking-tight italic">Namaste Nima</a>
-      <div className="hidden md:flex gap-10 text-[11px] uppercase tracking-[0.22em] font-medium">
-        <a href="#services" className="hover:text-copper transition-colors">Services</a>
-        <a href="#dishes" className="hover:text-copper transition-colors">Dishes</a>
-        <a href="#story" className="hover:text-copper transition-colors">Our Story</a>
-        <a href="#gallery" className="hover:text-copper transition-colors">Gallery</a>
-        <a href="#enquire" className="hover:text-copper transition-colors">Enquire</a>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-oxblood-950/78 backdrop-blur-xl">
+      <div className="nn-shell flex items-center justify-between py-4">
+        <a href="#top" className="flex items-center gap-3">
+          <img
+            src={logoMark}
+            alt="Namaste Nima logo"
+            className="h-12 w-12 rounded-full object-cover"
+          />
+          <div>
+            <div className="font-serif text-2xl leading-none text-white">Namaste Nima</div>
+            <div className="mt-1 text-[0.62rem] uppercase tracking-[0.32em] text-saffron-200/70">
+              North East catering studio
+            </div>
+          </div>
+        </a>
+
+        <nav className="hidden items-center gap-8 text-[0.72rem] uppercase tracking-[0.28em] text-white/72 md:flex">
+          <a href="#formats" className="transition-colors hover:text-saffron-200">
+            Services
+          </a>
+          <a href="#menu" className="transition-colors hover:text-saffron-200">
+            Menu
+          </a>
+          <a href="#gallery" className="transition-colors hover:text-saffron-200">
+            Gallery
+          </a>
+          <a href="#contact" className="transition-colors hover:text-saffron-200">
+            Enquiry
+          </a>
+        </nav>
+
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden rounded-full border border-white/15 px-5 py-3 text-[0.72rem] uppercase tracking-[0.28em] text-white transition-colors hover:border-saffron-200 hover:bg-saffron-200 hover:text-oxblood-950 md:inline-flex"
+        >
+          Visit Instagram
+        </a>
       </div>
-      <a href="#enquire" className="hidden md:inline-flex border border-ivory/30 px-5 py-2 text-[10px] uppercase tracking-[0.2em] hover:bg-ivory hover:text-charcoal transition-colors">
-        Book a Table
-      </a>
-    </nav>
+    </header>
   );
 }
 
 function Hero() {
   return (
-    <section id="top" className="relative h-[100svh] min-h-[640px] w-full flex items-end overflow-hidden">
-      <img
-        src={heroCurry}
-        alt="Steam rising from a copper pot of slow-cooked Indian curry"
-        width={1920}
-        height={1080}
-        className="absolute inset-0 w-full h-full object-cover scale-105 animate-fade-in"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/70" />
+    <section id="top" className="relative isolate overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,208,102,0.24),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,155,80,0.12),transparent_36%),linear-gradient(135deg,#4c0404_0%,#7d0808_44%,#320202_100%)]" />
+      <div className="absolute inset-y-0 right-0 hidden w-[42%] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)] lg:block" />
 
-      <div className="absolute top-[42%] -translate-y-1/2 left-0 right-0 px-6 md:px-12 z-10">
-        <div className="max-w-5xl">
-          <span className="inline-flex items-center gap-3 text-ivory/70 text-[10px] uppercase tracking-[0.35em] mb-6 animate-fade-up">
-            <span className="h-px w-10 bg-ivory/40" /> Indian Catering · United Kingdom
-          </span>
-          <h1 className="font-serif text-ivory text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.02] tracking-tight max-w-[18ch] animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            Authentic Indian Catering for <span className="italic font-light">Modern Gatherings.</span>
+      <div className="nn-shell relative grid gap-10 pb-18 pt-12 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+        <div className="relative z-10 flex flex-col justify-center">
+          <div className="nn-hero-pill">
+            Public profile cues: North East · events · private chef · meal plans · vegan
+          </div>
+          <h1 className="mt-7 max-w-5xl font-serif text-[3.55rem] leading-[0.9] tracking-[-0.04em] text-white sm:text-[4.8rem] lg:text-[6.75rem]">
+            Catering with colour, comfort and a proper sense of occasion.
           </h1>
-        </div>
-      </div>
-
-      <div className="relative z-10 px-6 md:px-12 pb-16 md:pb-20 w-full">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-          <p className="text-ivory/85 text-base md:text-lg font-light max-w-md leading-relaxed animate-fade-up" style={{ animationDelay: "0.25s" }}>
-            Private dining, event catering, freezer curries and healthy Indian meals — crafted with authentic family recipes for the discerning host.
+          <p className="mt-6 max-w-2xl text-base leading-8 text-white/76 md:text-lg">
+            A full homepage redesign for Namaste Nima, shaped around the public Instagram profile:
+            based in the North East, offering party and event catering, private chef evenings,
+            healthy meal plans, vegan menus, freezer curries, cookery lessons and a strong 5-star
+            hygiene trust signal.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 animate-fade-up" style={{ animationDelay: "0.4s" }}>
-            <a href="#enquire" className="bg-ivory text-charcoal px-9 py-4 text-[11px] uppercase tracking-[0.25em] font-medium hover:bg-copper hover:text-ivory transition-colors text-center">
-              Enquire Now
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="#formats" className="nn-button nn-button-light">
+              Explore services
             </a>
-            <a href="#services" className="border border-ivory/40 text-ivory px-9 py-4 text-[11px] uppercase tracking-[0.25em] font-medium hover:bg-ivory/10 backdrop-blur-sm transition-colors text-center">
-              View Services
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="nn-button nn-button-outline-light"
+            >
+              Open Instagram
             </a>
           </div>
-        </div>
-      </div>
 
-      <div className="absolute bottom-6 right-6 md:right-12 z-10 text-ivory/60 text-[10px] uppercase tracking-[0.3em] flex items-center gap-2 animate-float">
-        Scroll <span className="h-8 w-px bg-ivory/40" />
+          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+            {[
+              "Warm event food, not generic banquet copy",
+              "Logo-led red and saffron design system",
+              "Structured to drop in real post media later",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-[1.35rem] border border-white/10 bg-white/7 px-4 py-4 text-sm leading-6 text-white/78 backdrop-blur"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative z-10">
+          <div className="absolute -left-8 top-12 hidden h-28 w-28 rounded-full border border-saffron-200/25 lg:block" />
+          <div className="nn-hero-card">
+            <div className="relative overflow-hidden rounded-[2rem]">
+              <img
+                src={heroCurry}
+                alt="A rich curry dish with coriander and spices"
+                className="h-[420px] w-full object-cover md:h-[520px]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-oxblood-950/82 via-oxblood-950/12 to-transparent" />
+              <div className="absolute left-5 top-5 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[0.68rem] uppercase tracking-[0.3em] text-white/84 backdrop-blur">
+                North East based
+              </div>
+              <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-5">
+                <div className="max-w-sm rounded-[1.7rem] border border-white/12 bg-oxblood-950/56 px-5 py-4 text-sm leading-6 text-white/76 backdrop-blur-md">
+                  Public profile description confirms: party and event catering, private chef,
+                  healthy meal plan, vegan, freezer curries, cookery lessons and 5-star hygiene.
+                </div>
+                <img
+                  src={logoMark}
+                  alt="Namaste Nima logo mark"
+                  className="hidden h-28 w-28 rounded-full border border-saffron-100/60 object-cover shadow-2xl md:block"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function Marquee() {
-  const items = ["Family Recipes", "Slow Cooked", "British-Sourced", "Hand-Blended Spice", "Private Dining", "Editorial Plating"];
-  const loop = [...items, ...items];
+function SignalBar() {
   return (
-    <div className="border-y border-charcoal/10 py-5 overflow-hidden bg-ivory">
-      <div className="flex gap-16 whitespace-nowrap animate-marquee">
-        {loop.map((t, i) => (
-          <span key={i} className="font-serif italic text-2xl md:text-3xl text-charcoal/70 flex items-center gap-16">
-            {t} <span className="text-copper">✦</span>
-          </span>
-        ))}
+    <section className="border-y border-oxblood-900/12 bg-sand-100/70">
+      <div className="nn-shell">
+        <div className="flex gap-4 overflow-x-auto py-5 text-[0.7rem] uppercase tracking-[0.28em] text-foreground/70 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {PROFILE_SIGNALS.map((item) => (
+            <span key={item} className="flex shrink-0 items-center gap-4">
+              <span>{item}</span>
+              <span className="text-saffron-600">✦</span>
+            </span>
+          ))}
+        </div>
       </div>
+    </section>
+  );
+}
+
+function SectionIntro({
+  kicker,
+  title,
+  body,
+  inverse = false,
+}: {
+  kicker: string;
+  title: string;
+  body: string;
+  inverse?: boolean;
+}) {
+  return (
+    <div className="mb-12 grid gap-4 md:mb-14 md:grid-cols-[0.95fr_0.85fr] md:items-end">
+      <div>
+        <div className={inverse ? "nn-kicker nn-kicker-inverse" : "nn-kicker"}>{kicker}</div>
+        <h2
+          className={`mt-4 max-w-3xl font-serif text-4xl leading-[0.98] tracking-tight md:text-6xl ${
+            inverse ? "text-white" : "text-oxblood-950"
+          }`}
+        >
+          {title}
+        </h2>
+      </div>
+      <p
+        className={`max-w-xl text-base leading-8 ${inverse ? "text-white/72" : "text-foreground/72"}`}
+      >
+        {body}
+      </p>
     </div>
   );
 }
 
-function Services() {
+function Field({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <section id="services" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 mb-16">
-        <div className="max-w-2xl">
-          <span className="text-olive uppercase tracking-[0.3em] text-[10px] font-semibold mb-5 block">Curated Experiences</span>
-          <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight">
-            Elevated Indian hospitality, <span className="italic">tailored to your occasion.</span>
-          </h2>
-        </div>
-        <a href="#enquire" className="text-[10px] uppercase tracking-[0.25em] border-b border-charcoal pb-1 hover:text-copper hover:border-copper transition-colors whitespace-nowrap">
-          Discuss your event →
-        </a>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {SERVICES.map((s) => (
-          <article key={s.title} className="group cursor-pointer">
-            <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-cream mb-5 relative">
-              <img
-                src={s.image}
-                alt={s.title}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105 grayscale group-hover:grayscale-0"
-              />
-              <span className="absolute top-4 left-4 text-ivory text-[10px] uppercase tracking-[0.25em] font-medium mix-blend-difference">{s.eyebrow}</span>
-            </div>
-            <div className="flex justify-between items-baseline mb-2">
-              <h3 className="font-serif text-2xl md:text-[1.7rem] leading-tight">{s.title}</h3>
-              <span className="text-copper text-lg group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-            <p className="text-charcoal/60 text-sm leading-relaxed max-w-sm">{s.blurb}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function SignatureDishes() {
-  return (
-    <section id="dishes" className="py-24 md:py-32 bg-cream overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mb-14 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div>
-          <span className="text-olive uppercase tracking-[0.3em] text-[10px] font-semibold mb-5 block">The Collection</span>
-          <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight max-w-2xl">
-            Signature <span className="italic">creations.</span>
-          </h2>
-        </div>
-        <p className="text-charcoal/60 text-sm max-w-xs">Drag, scroll, or tap a dish to reveal its ingredients — every plate built around family recipes.</p>
-      </div>
-
-      <div className="flex gap-6 md:gap-8 overflow-x-auto pb-12 px-6 md:px-12 no-scrollbar snap-x snap-mandatory">
-        {DISHES.map((d) => (
-          <DishCard key={d.name} dish={d} />
-        ))}
-        <div className="min-w-4 md:min-w-12 flex-shrink-0" />
-      </div>
-    </section>
-  );
-}
-
-function DishCard({ dish }: { dish: Dish }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <article className="snap-start flex-shrink-0 w-[85vw] sm:w-[420px] bg-ivory rounded-3xl overflow-hidden border border-charcoal/5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.15)]">
-      <div className="aspect-[5/4] overflow-hidden bg-cream">
-        <img src={dish.image} alt={dish.name} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-[1200ms]" />
-      </div>
-      <div className="p-7 md:p-8">
-        <div className="flex justify-between items-start gap-4 mb-3">
-          <h3 className="font-serif text-2xl md:text-[1.6rem] leading-tight">{dish.name}</h3>
-          <div className="flex flex-wrap justify-end gap-1.5 max-w-[55%]">
-            {dish.allergens.map((a) => (
-              <span key={a} className={`px-2 py-1 rounded-full border ${ALLERGEN_STYLES[a]} text-[9px] font-medium uppercase tracking-[0.1em] whitespace-nowrap`}>
-                {a}
-              </span>
-            ))}
-          </div>
-        </div>
-        <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{dish.blurb}</p>
-
-        <button
-          onClick={() => setOpen(!open)}
-          className="w-full flex justify-between items-center pt-5 border-t border-charcoal/10 text-[10px] uppercase tracking-[0.25em] font-semibold text-copper"
-        >
-          <span>{open ? "Hide Ingredients" : "View Ingredients"}</span>
-          <span className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}>↓</span>
-        </button>
-        <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${open ? "grid-rows-[1fr] mt-4" : "grid-rows-[0fr]"}`}>
-          <div className="overflow-hidden">
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-charcoal/65 italic">
-              {dish.ingredients.map((i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="h-1 w-1 rounded-full bg-copper" />
-                  {i}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function Story() {
-  return (
-    <section id="story" className="grid grid-cols-1 md:grid-cols-12 min-h-[80vh]">
-      <div className="md:col-span-6 relative">
-        <img src={aboutPortrait} alt="Founder of Namaste Nima in her kitchen" loading="lazy" className="w-full h-full object-cover min-h-[400px]" />
-      </div>
-      <div className="md:col-span-6 bg-charcoal text-ivory flex items-center px-6 md:px-16 lg:px-24 py-20 md:py-28 relative">
-        <div className="max-w-lg">
-          <span className="text-copper uppercase tracking-[0.3em] text-[10px] font-semibold mb-6 block">The Nima Philosophy</span>
-          <h2 className="font-serif text-4xl md:text-5xl leading-[1.1] mb-8">
-            Recipes passed through generations, <span className="italic">refined for the modern table.</span>
-          </h2>
-          <div className="space-y-5 text-ivory/75 leading-relaxed text-[15px]">
-            <p>
-              Namaste Nima began at a kitchen table in the West Midlands — three generations of women, copper pots, and the unhurried rhythm of slow cooking. Every recipe in our kitchen is a small inheritance.
-            </p>
-            <p>
-              We blend our spices in-house, source from local British growers, and cook the way our family always has: gently, patiently, with care. Hospitality, for us, is the warmth of the room and the memory you carry home.
-            </p>
-          </div>
-          <a href="#enquire" className="inline-block mt-10 text-[10px] uppercase tracking-[0.3em] border-b border-ivory pb-1 hover:text-copper hover:border-copper transition-colors">
-            Cook with us →
-          </a>
-        </div>
-
-        <img src={aboutHands} alt="Hands kneading dough" loading="lazy" className="hidden lg:block absolute -left-20 bottom-12 w-44 h-56 object-cover rounded-lg shadow-2xl border-4 border-charcoal" />
-      </div>
-    </section>
-  );
-}
-
-function Gallery() {
-  const [active, setActive] = useState<"All" | GalleryCat>("All");
-  const items = active === "All" ? GALLERY : GALLERY.filter((g) => g.cat === active);
-  return (
-    <section id="gallery" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-        <div>
-          <span className="text-olive uppercase tracking-[0.3em] text-[10px] font-semibold mb-5 block">From Our Kitchen</span>
-          <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight">A visual <span className="italic">journal.</span></h2>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setActive(c)}
-              className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.2em] font-medium border transition-colors ${
-                active === c
-                  ? "bg-charcoal text-ivory border-charcoal"
-                  : "bg-transparent text-charcoal/70 border-charcoal/15 hover:border-charcoal"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="columns-2 md:columns-3 gap-4 md:gap-6 [column-fill:_balance]">
-        {items.map((g, i) => (
-          <figure key={`${g.src}-${i}`} className="mb-4 md:mb-6 break-inside-avoid group overflow-hidden rounded-xl bg-cream relative">
-            <img src={g.src} alt={g.cat} loading="lazy" className={`w-full ${g.aspect} object-cover transition-transform duration-[1200ms] group-hover:scale-105`} />
-            <figcaption className="absolute bottom-3 left-3 text-ivory text-[10px] uppercase tracking-[0.2em] mix-blend-difference">{g.cat}</figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  const [i, setI] = useState(0);
-  const t = TESTIMONIALS[i];
-  return (
-    <section className="bg-cream py-24 md:py-32 px-6 md:px-12">
-      <div className="max-w-4xl mx-auto text-center">
-        <span className="text-olive uppercase tracking-[0.3em] text-[10px] font-semibold mb-8 block">In Their Words</span>
-        <blockquote className="font-serif text-3xl md:text-5xl leading-[1.2] italic text-charcoal/90 mb-10">
-          “{t.quote}”
-        </blockquote>
-        <div className="text-[11px] uppercase tracking-[0.25em] text-charcoal mb-2 font-medium">{t.name}</div>
-        <div className="text-[10px] uppercase tracking-[0.2em] text-charcoal/50">{t.event}</div>
-
-        <div className="flex justify-center gap-2 mt-12">
-          {TESTIMONIALS.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setI(idx)}
-              aria-label={`Testimonial ${idx + 1}`}
-              className={`h-px transition-all ${i === idx ? "w-12 bg-charcoal" : "w-6 bg-charcoal/20"}`}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Instagram() {
-  const tiles = [dishAlooTikki, dishChickenTikka, galleryStreet, dishDahl, galleryHome, dishSamosa];
-  return (
-    <section className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
-        <div>
-          <span className="text-olive uppercase tracking-[0.3em] text-[10px] font-semibold mb-5 block">Follow Along</span>
-          <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight">@namastenima</h2>
-        </div>
-        <a href="#" className="text-[10px] uppercase tracking-[0.25em] border-b border-charcoal pb-1 hover:text-copper hover:border-copper transition-colors">Visit Instagram →</a>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-3">
-        {tiles.map((src, i) => (
-          <a key={i} href="#" className="aspect-square overflow-hidden bg-cream group relative rounded-md">
-            <img src={src} alt={`Instagram post ${i + 1}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/30 transition-colors flex items-center justify-center text-ivory text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100">View</div>
-          </a>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Enquiry() {
-  return (
-    <section id="enquire" className="bg-charcoal text-ivory py-24 md:py-32 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-        <div className="lg:col-span-5">
-          <span className="text-copper uppercase tracking-[0.3em] text-[10px] font-semibold mb-6 block">Begin the Conversation</span>
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-8">
-            Let's curate your <span className="italic">next gathering.</span>
-          </h2>
-          <p className="text-ivory/65 leading-relaxed mb-12 max-w-md">
-            Whether it's an intimate dinner for two or a celebration for two hundred, share your vision and we'll respond within 24 hours.
-          </p>
-
-          <div className="space-y-5">
-            <a href="#" className="flex items-center gap-5 group">
-              <span className="size-12 rounded-full bg-ivory/5 border border-ivory/15 grid place-items-center group-hover:bg-copper group-hover:border-copper transition-colors text-copper group-hover:text-ivory">W</span>
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-ivory/50">Quick Enquiry</div>
-                <div className="text-base">WhatsApp · +44 7700 900123</div>
-              </div>
-            </a>
-            <a href="#" className="flex items-center gap-5 group">
-              <span className="size-12 rounded-full bg-ivory/5 border border-ivory/15 grid place-items-center group-hover:bg-copper group-hover:border-copper transition-colors text-copper group-hover:text-ivory">@</span>
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-ivory/50">Email</div>
-                <div className="text-base">studio@namastenima.co.uk</div>
-              </div>
-            </a>
-            <a href="#" className="flex items-center gap-5 group">
-              <span className="size-12 rounded-full bg-ivory/5 border border-ivory/15 grid place-items-center group-hover:bg-copper group-hover:border-copper transition-colors text-copper group-hover:text-ivory">IG</span>
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-ivory/50">Instagram</div>
-                <div className="text-base">@namastenima</div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <form className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8" onSubmit={(e) => e.preventDefault()}>
-          <Field label="Event Type">
-            <select className="enquiry-input">
-              <option>Private Dining</option>
-              <option>Wedding</option>
-              <option>Corporate</option>
-              <option>Freezer Curries</option>
-              <option>Healthy Meal Plan</option>
-            </select>
-          </Field>
-          <Field label="Guest Count">
-            <input type="text" placeholder="e.g. 24" className="enquiry-input" />
-          </Field>
-          <Field label="Preferred Date">
-            <input type="date" className="enquiry-input" />
-          </Field>
-          <Field label="Budget">
-            <select className="enquiry-input">
-              <option>£500 – £1,500</option>
-              <option>£1,500 – £5,000</option>
-              <option>£5,000 – £15,000</option>
-              <option>£15,000+</option>
-            </select>
-          </Field>
-          <Field label="Dietary Requirements" className="md:col-span-2">
-            <input type="text" placeholder="Vegan, gluten-free, allergies…" className="enquiry-input" />
-          </Field>
-          <Field label="Tell Us About Your Event" className="md:col-span-2">
-            <textarea rows={4} placeholder="Venue, vibe, anything we should know…" className="enquiry-input resize-none" />
-          </Field>
-          <div className="md:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-4">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-ivory/40">We respond within 24 hours.</p>
-            <button type="submit" className="bg-ivory text-charcoal px-10 py-4 text-[11px] uppercase tracking-[0.3em] font-semibold hover:bg-copper hover:text-ivory transition-colors">
-              Send Enquiry
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <style>{`
-        .enquiry-input {
-          width: 100%;
-          background: transparent;
-          border: 0;
-          border-bottom: 1px solid rgb(255 255 255 / 0.15);
-          padding: 0.6rem 0;
-          color: var(--ivory);
-          font-size: 0.95rem;
-          outline: none;
-          transition: border-color 0.3s;
-        }
-        .enquiry-input:focus { border-color: var(--copper); }
-        .enquiry-input::placeholder { color: rgb(255 255 255 / 0.3); }
-        select.enquiry-input option { background: var(--charcoal); color: var(--ivory); }
-      `}</style>
-    </section>
-  );
-}
-
-function Field({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
-  return (
-    <label className={`block ${className}`}>
-      <span className="text-[10px] uppercase tracking-[0.25em] text-ivory/45 mb-2 block">{label}</span>
+    <label className={className}>
+      <span className="mb-2 block text-[0.72rem] uppercase tracking-[0.28em] text-white/58">
+        {label}
+      </span>
       {children}
     </label>
   );
@@ -572,15 +699,38 @@ function Field({ label, children, className = "" }: { label: string; children: R
 
 function Footer() {
   return (
-    <footer className="bg-ivory py-14 px-6 md:px-12 border-t border-charcoal/10">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <span className="font-serif text-2xl italic">Namaste Nima</span>
-        <div className="flex gap-8 text-[10px] uppercase tracking-[0.25em] font-medium">
-          <a href="#" className="hover:text-copper transition-colors">Instagram</a>
-          <a href="#" className="hover:text-copper transition-colors">WhatsApp</a>
-          <a href="#" className="hover:text-copper transition-colors">Email</a>
+    <footer className="border-t border-oxblood-900/10 bg-background py-8">
+      <div className="nn-shell flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <img
+            src={logoMark}
+            alt="Namaste Nima logo"
+            className="h-12 w-12 rounded-full object-cover"
+          />
+          <div>
+            <div className="font-serif text-2xl leading-none text-oxblood-950">Namaste Nima</div>
+            <div className="mt-1 text-[0.66rem] uppercase tracking-[0.28em] text-foreground/52">
+              Homepage redesign rooted in public profile cues
+            </div>
+          </div>
         </div>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-charcoal/40">© 2026 · Crafted in the UK</p>
+
+        <div className="flex flex-wrap gap-5 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/58">
+          <a href="#formats" className="transition-colors hover:text-saffron-700">
+            Services
+          </a>
+          <a href="#gallery" className="transition-colors hover:text-saffron-700">
+            Gallery
+          </a>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-saffron-700"
+          >
+            Instagram
+          </a>
+        </div>
       </div>
     </footer>
   );

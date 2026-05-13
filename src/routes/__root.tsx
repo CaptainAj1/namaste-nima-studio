@@ -72,21 +72,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Namaste Nima — Authentic Indian Catering & Private Dining UK" },
-      { name: "description", content: "Boutique Indian catering, private chef experiences, healthy meal plans and freezer curries crafted from authentic family recipes across the UK." },
+      { title: "Namaste Nima — North East Catering, Private Chef & Meal Plans" },
+      {
+        name: "description",
+        content:
+          "Namaste Nima is a North East-based catering studio offering party and event catering, private chef experiences, healthy meal plans, vegan menus, freezer curries and cookery lessons.",
+      },
       { name: "author", content: "Namaste Nima" },
-      { property: "og:title", content: "Namaste Nima — Authentic Indian Catering" },
-      { property: "og:description", content: "Private dining, event catering and heritage recipes for the modern UK gathering." },
+      { property: "og:title", content: "Namaste Nima — North East Catering and Private Chef" },
+      {
+        property: "og:description",
+        content:
+          "Party and event catering, private chef experiences, healthy meal plans, vegan menus, freezer curries and cookery lessons from Namaste Nima.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@namastenimauk" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap",
       },
       {
         rel: "stylesheet",
