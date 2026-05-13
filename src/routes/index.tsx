@@ -139,8 +139,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const INSTAGRAM = [dishAlooTikki, dishChicken => dishChickenTikka, dishChana, dishSaag, dishSamosa, dishDahl].map((v) => (typeof v === "function" ? dishChickenTikka : v));
-
 function Home() {
   return (
     <main className="bg-ivory text-charcoal font-sans overflow-x-hidden">
