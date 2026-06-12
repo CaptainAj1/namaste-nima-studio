@@ -72,18 +72,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Namaste Nima — North East Catering, Private Chef & Meal Plans" },
+      { title: "Namaste Nima | Indian Catering, Private Dining and Shared Feasts" },
       {
         name: "description",
         content:
-          "Namaste Nima is a North East-based catering studio offering party and event catering, private chef experiences, healthy meal plans, vegan menus, freezer curries and cookery lessons.",
+          "Namaste Nima offers Indian party catering, private dining, vegan menus, freezer curries and cookery-led food experiences built around flavour, comfort and shared tables.",
       },
       { name: "author", content: "Namaste Nima" },
-      { property: "og:title", content: "Namaste Nima — North East Catering and Private Chef" },
+      {
+        property: "og:title",
+        content: "Namaste Nima | Indian Catering, Private Dining and Shared Feasts",
+      },
       {
         property: "og:description",
         content:
-          "Party and event catering, private chef experiences, healthy meal plans, vegan menus, freezer curries and cookery lessons from Namaste Nima.",
+          "Indian party catering, private dining, vegan menus, freezer curries and cookery-led experiences from Namaste Nima.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -94,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap",
       },
       {
         rel: "stylesheet",
