@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import {
   BookOpen,
   CookingPot,
+  Menu,
   Facebook,
   Heart,
   Instagram,
   Leaf,
+  X,
   Package,
   Salad,
   Star,
@@ -44,37 +46,37 @@ const NAV_ITEMS = [
 const SERVICES = [
   {
     title: "Party & Event Catering",
-    description: "Menus for birthdays, weddings and celebrations of any size.",
+    description: "Indian feasts for birthdays, family occasions, office gatherings and community celebrations.",
     icon: Users,
     tone: "olive",
   },
   {
-    title: "Private Dining",
-    description: "Intimate dinners at home with restaurant style service.",
+    title: "Street Food & Pop-Ups",
+    description: "Fresh onion bhaji, chaat, wraps and warming favourites for markets, festivals and pop-up events.",
     icon: CookingPot,
     tone: "rust",
   },
   {
-    title: "Meal Plans",
-    description: "Balanced meal plans for busy weekdays and healthy living.",
+    title: "Takeaway Feasts",
+    description: "Home-style takeaway menus for cosy nights in, weekend treats and sharing platters for two or more.",
     icon: Salad,
     tone: "olive",
   },
   {
-    title: "Vegan Options",
-    description: "Flavourful plant based dishes that everyone will love.",
+    title: "Vegan & Vegetarian Menus",
+    description: "Flavour-packed plant-based curries, rice, snacks and sides that never feel like an afterthought.",
     icon: Leaf,
     tone: "rust",
   },
   {
-    title: "Freezer Curries",
-    description: "Homestyle curries made in batches ready when you need them.",
+    title: "Chai, Lassi & Breakfasts",
+    description: "Masala chai, mango lassi, poha and breakfast wraps for nourishing morning and drinks-led events.",
     icon: Package,
     tone: "olive",
   },
   {
-    title: "Cookery Lessons",
-    description: "Hands on classes to learn techniques and family recipes.",
+    title: "Cookery Workshops",
+    description: "Hands-on Indian cooking sessions where guests learn recipes, techniques and the stories behind the flavours.",
     icon: BookOpen,
     tone: "rust",
   },
@@ -148,6 +150,7 @@ function Home() {
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -159,26 +162,92 @@ function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return (
-    <header className={`nn-header ${isScrolled ? "is-scrolled" : ""}`}>
-      <div className="nn-shell nn-header-inner">
-        <a href="#top" className="nn-logo-link" aria-label="Namaste Nima home">
-          <img src={logoMark} alt="Namaste Nima logo" className="nn-logo" />
-        </a>
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMenuOpen(false);
+      }
+    };
 
-        <nav className="nn-nav" aria-label="Primary">
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = isMenuOpen ? "hidden" : previousOverflow;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isMenuOpen]);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
+  return (
+    <>
+      <header className={`nn-header ${isScrolled ? "is-scrolled" : ""} ${isMenuOpen ? "is-menu-open" : ""}`}>
+        <div className="nn-shell nn-header-inner">
+          <a href="#top" className="nn-logo-link" aria-label="Namaste Nima home">
+            <img src={logoMark} alt="Namaste Nima logo" className="nn-logo" />
+          </a>
+
+          <nav className="nn-nav" aria-label="Primary">
+            {NAV_ITEMS.map(([label, href], index) => (
+              <a key={label} href={href} className={`nn-nav-link ${index === 0 ? "is-active" : ""}`}>
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <a href="#contact" className="nn-cta nn-cta-solid">
+            Enquire Now
+          </a>
+
+          <button
+            type="button"
+            className="nn-menu-toggle"
+            aria-expanded={isMenuOpen}
+            aria-controls="nn-mobile-nav"
+            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            {isMenuOpen ? <X size={22} strokeWidth={2} /> : <Menu size={22} strokeWidth={2} />}
+          </button>
+        </div>
+      </header>
+
+      <div
+        className={`nn-mobile-menu ${isMenuOpen ? "is-open" : ""}`}
+        id="nn-mobile-nav"
+        onClick={closeMenu}
+      >
+        <nav className="nn-mobile-nav" aria-label="Mobile primary" onClick={(event) => event.stopPropagation()}>
           {NAV_ITEMS.map(([label, href], index) => (
-            <a key={label} href={href} className={`nn-nav-link ${index === 0 ? "is-active" : ""}`}>
+            <a
+              key={label}
+              href={href}
+              className={`nn-mobile-nav-link ${index === 0 ? "is-active" : ""}`}
+              onClick={closeMenu}
+            >
               {label}
             </a>
           ))}
+          <a href="#contact" className="nn-cta nn-cta-solid nn-mobile-menu-cta" onClick={closeMenu}>
+            Enquire Now
+          </a>
         </nav>
-
-        <a href="#contact" className="nn-cta nn-cta-solid">
-          Enquire Now
-        </a>
       </div>
-    </header>
+    </>
   );
 }
 
@@ -196,8 +265,8 @@ function Hero() {
               made <em>with heart</em>
             </h1>
             <p className="nn-hero-text">
-              We bring the warmth of Indian cooking to your table with private dining, party
-              catering, meal plans, vegan options, freezer curries and cookery lessons.
+              From event catering and street food pop-ups to chai bars, takeaway feasts and
+              cookery workshops, we bring warm, homemade Indian food to gatherings of every kind.
             </p>
 
             <div className="nn-hero-actions">
@@ -254,11 +323,11 @@ function MenuSection() {
     <section className="nn-menu" id="menu">
       <div className="nn-shell">
         <SectionHeading
-          label="Signature dishes"
+          label="Popular event favourites"
           light
           title={
             <>
-              Flavours you&apos;ll <em>remember</em>
+              Food your guests will <em>remember</em>
             </>
           }
         />
@@ -277,7 +346,7 @@ function MenuSection() {
 
         <div className="nn-menu-action">
           <a href="#contact" className="nn-cta nn-cta-light">
-            See Full Menu
+            Ask For A Menu
           </a>
         </div>
       </div>
@@ -304,26 +373,27 @@ function StorySection() {
             align="left"
             title={
               <>
-                Cooking with tradition.
+                Rooted in community.
                 <br />
-                Serving with <em>love.</em>
+                Cooked with <em>care.</em>
               </>
             }
           />
 
           <p>
-            Namaste Nima was born from a love of Indian home cooking and the joy it brings to people
-            when shared.
+            Namaste Nima is built around the kind of Indian food people remember: fresh curries,
+            street food favourites, chai, lassi and generous plates made for sharing.
           </p>
           <p>
-            Every dish is prepared with quality ingredients, traditional techniques and a deep
-            respect for flavour.
+            From beachside breakfasts and vegan festivals to family parties, community gardens and
+            cosy takeaway nights, every menu is cooked with care, colour and a real love for
+            bringing people together.
           </p>
 
           <div className="nn-story-values">
-            <Value icon={Leaf} title="Authentic" text="Indian recipes" />
-            <Value icon={Heart} title="Made fresh" text="with quality ingredients" />
-            <Value icon={Users} title="Warm service" text="you can trust" />
+            <Value icon={Leaf} title="Freshly made" text="for every gathering" />
+            <Value icon={Heart} title="Homemade flavour" text="rooted in tradition" />
+            <Value icon={Users} title="Welcoming service" text="for community and celebrations" />
           </div>
         </div>
       </div>
@@ -381,9 +451,9 @@ function ContactSection() {
             align="left"
             title={
               <>
-                Let&apos;s plan something
+                Let&apos;s plan your
                 <br />
-                delicious <em>together</em>
+                next <em>gathering</em>
               </>
             }
           />
@@ -410,21 +480,21 @@ function ContactSection() {
             <input className="nn-input" type="email" placeholder="Email Address" />
             <input className="nn-input" type="text" placeholder="Guest Count" />
             <input className="nn-input" type="text" placeholder="Event Date" />
-            <input className="nn-input" type="text" placeholder="Service Interested In" />
+            <input className="nn-input" type="text" placeholder="Venue or Location" />
             <select className="nn-input" defaultValue="">
               <option value="" disabled>
                 Select a service
               </option>
               <option>Party & Event Catering</option>
-              <option>Private Dining</option>
-              <option>Meal Plans</option>
-              <option>Vegan Options</option>
-              <option>Freezer Curries</option>
-              <option>Cookery Lessons</option>
+              <option>Street Food & Pop-Ups</option>
+              <option>Takeaway Feasts</option>
+              <option>Vegan & Vegetarian Menus</option>
+              <option>Chai, Lassi & Breakfasts</option>
+              <option>Cookery Workshops</option>
             </select>
             <textarea
               className="nn-input nn-textarea"
-              placeholder="Tell us about your event or requirements"
+              placeholder="Tell us about your event, menu ideas or workshop plans"
             />
           </div>
 
