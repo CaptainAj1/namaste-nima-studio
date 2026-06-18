@@ -16,12 +16,12 @@ import {
 } from "lucide-react";
 
 import dishChana from "@/assets/dish-chana.jpg";
-import dishChickenTikka from "@/assets/dish-chicken-tikka.jpg";
 import dishDahl from "@/assets/dish-dahl.jpg";
+import dishHyderabadiBiryani from "@/assets/dish-hyderabadi-biryani.jpg";
+import dishOnionBhajji from "@/assets/dish-onion-bhajji.jpg";
+import dishPaneerButterMasala from "@/assets/dish-paneer-butter-masala.jpg";
 import dishSamosa from "@/assets/dish-samosa.jpg";
-import galleryHome from "@/assets/gallery-home.jpg";
 import heroBackgroundFull from "@/assets/hero-background-full.png";
-import heroCurry from "@/assets/hero-curry.jpg";
 import logoMark from "@/assets/namaste-nima-logo-cropped.png";
 import storyPhotoOne from "@/assets/story-photo-one.jpg";
 import storyPhotoTwo from "@/assets/story-photo-two.jpg";
@@ -91,17 +91,17 @@ const DISHES = [
   {
     title: "Paneer Butter Masala",
     description: "Soft paneer in a rich and creamy tomato cashew gravy.",
-    image: heroCurry,
+    image: dishPaneerButterMasala,
   },
   {
     title: "Hyderabadi Biryani",
     description: "Fragrant basmati rice layered with spices and herbs.",
-    image: galleryHome,
+    image: dishHyderabadiBiryani,
   },
   {
-    title: "Seekh Kebabs",
-    description: "Juicy minced kebabs flavoured with spices and herbs.",
-    image: dishChickenTikka,
+    title: "Onion Bhajji",
+    description: "Crisp onion fritters made with gram flour, herbs and warming spices.",
+    image: dishOnionBhajji,
   },
   {
     title: "Dal Tadka",
@@ -232,6 +232,9 @@ function Header() {
         onClick={closeMenu}
       >
         <nav className="nn-mobile-nav" aria-label="Mobile primary" onClick={(event) => event.stopPropagation()}>
+          <button type="button" className="nn-mobile-close" aria-label="Close navigation menu" onClick={closeMenu}>
+            <X size={22} strokeWidth={2} />
+          </button>
           {NAV_ITEMS.map(([label, href], index) => (
             <a
               key={label}
@@ -254,8 +257,7 @@ function Header() {
 function Hero() {
   return (
     <section className="nn-hero">
-      <div className="nn-hero-shell">
-        <img src={heroBackgroundFull} alt="" aria-hidden="true" className="nn-hero-background" />
+      <div className="nn-hero-shell" style={{ backgroundImage: `url(${heroBackgroundFull})` }}>
         <div className="nn-shell">
           <div className="nn-hero-copy">
             <div className="nn-divider-label">Authentic. Fresh. Made to share</div>
@@ -511,15 +513,11 @@ function Footer() {
   return (
     <footer className="nn-footer" id="gallery">
       <div className="nn-shell nn-footer-inner">
-        <img src={logoMark} alt="Namaste Nima logo" className="nn-footer-logo" />
         <p>© 2026 Namaste Nima. All rights reserved.</p>
         <div className="nn-footer-links">
           <a href="#top">Privacy Policy</a>
           <a href="#top">Terms & Conditions</a>
         </div>
-        <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">
-          Instagram
-        </a>
       </div>
     </footer>
   );

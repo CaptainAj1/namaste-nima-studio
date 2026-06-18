@@ -130,27 +130,38 @@
     position: fixed;
     inset: 0 0 auto;
     z-index: 40;
-    padding-top: 1rem;
+    padding-top: 0.7rem;
     background: transparent;
     transition:
+      padding-top 180ms ease,
       background-color 180ms ease,
       box-shadow 180ms ease,
-      backdrop-filter 180ms ease,
-      padding-top 180ms ease;
+      backdrop-filter 180ms ease;
   }
 
   .nn-header.is-scrolled {
-    padding-top: 0.55rem;
+    padding-top: 0.35rem;
     background: rgba(255, 249, 239, 0.86);
     backdrop-filter: blur(14px);
     box-shadow: 0 1px 0 rgba(188, 169, 129, 0.35);
   }
 
   .nn-header.is-menu-open {
-    padding-top: 0.55rem;
+    padding-top: 0.35rem;
     background: rgba(255, 249, 239, 0.94);
     backdrop-filter: blur(14px);
     box-shadow: 0 1px 0 rgba(188, 169, 129, 0.35);
+  }
+
+  @media (min-width: 48rem) {
+    .nn-header {
+      padding-bottom: 0.7rem;
+    }
+
+    .nn-header.is-scrolled,
+    .nn-header.is-menu-open {
+      padding-bottom: 0.35rem;
+    }
   }
 
   .nn-header-inner {
@@ -158,12 +169,13 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 1rem;
+    min-height: 6.2rem;
   }
 
   .nn-logo-link {
     justify-self: start;
     display: block;
-    width: 7.15rem;
+    width: 6.15rem;
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: 999px;
@@ -176,7 +188,7 @@
     aspect-ratio: 1;
     border-radius: 999px;
     object-fit: cover;
-    transform: scale(1.06);
+    transform: scale(1.16);
     transform-origin: center;
     box-shadow: 0 10px 24px rgba(89, 57, 18, 0.08);
   }
@@ -218,6 +230,8 @@
   }
 
   .nn-mobile-menu {
+    position: fixed;
+    inset: 0;
     display: flex;
     visibility: hidden;
     opacity: 0;
@@ -229,6 +243,10 @@
       opacity 220ms ease,
       visibility 220ms ease,
       transform 260ms ease;
+  }
+
+  .nn-mobile-close {
+    display: none;
   }
 
   .nn-cta {
@@ -282,19 +300,28 @@
     position: relative;
     overflow: hidden;
     width: 100%;
-    min-height: 48rem;
-    padding-top: 7.2rem;
-    padding-bottom: 3.1rem;
+    min-height: clamp(42rem, 56.28vw, 58rem);
+    padding-top: 6.35rem;
+    padding-bottom: 5.4rem;
+    isolation: isolate;
+  }
+
+  .nn-hero-shell::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    background-image: inherit;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
   }
 
   .nn-hero-background {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    pointer-events: none;
+    display: none;
   }
 
   .nn-hero-copy {
@@ -775,7 +802,7 @@
   }
 
   .nn-footer-inner {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: 0.9rem 1.2rem;
     font-size: 0.88rem;
@@ -786,15 +813,11 @@
     margin: 0;
   }
 
-  .nn-footer-logo {
-    width: 1.75rem;
-    box-shadow: none;
-  }
-
   .nn-footer-links {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    justify-self: end;
   }
 
   @media (min-width: 48rem) {
@@ -848,7 +871,7 @@
     }
 
     .nn-hero-shell {
-      min-height: 44rem;
+      min-height: clamp(40rem, 56.28vw, 54rem);
     }
 
     .nn-form-panel {
@@ -862,7 +885,7 @@
     }
 
     .nn-logo {
-      transform: scale(1.05);
+      transform: scale(1.16);
     }
 
     .nn-nav,
@@ -902,9 +925,24 @@
       gap: 0.1rem;
       width: min(100%, 28rem);
       margin: auto;
-      padding: 1.25rem 0 0.6rem;
+      padding: 0.5rem 0 0.6rem;
       background: transparent;
       text-align: center;
+    }
+
+    .nn-mobile-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: end;
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid rgba(196, 153, 92, 0.52);
+      border-radius: 999px;
+      background: rgba(255, 251, 244, 0.78);
+      color: var(--rust-700);
+      box-shadow: 0 10px 22px rgba(99, 72, 33, 0.08);
     }
 
     .nn-mobile-nav-link {
@@ -938,8 +976,12 @@
 
     .nn-hero-shell {
       min-height: auto;
-      padding-top: 7.4rem;
-      padding-bottom: 3rem;
+      padding-top: 6.8rem;
+      padding-bottom: 3.5rem;
+    }
+
+    .nn-hero-shell::before {
+      top: -1.4rem;
     }
 
     .nn-hero-copy {
@@ -972,20 +1014,25 @@
     }
 
     .nn-header {
-      padding-top: 0.75rem;
+      padding-top: 0.5rem;
     }
 
-    .nn-header.is-scrolled {
-      padding-top: 0.35rem;
+    .nn-header.is-scrolled,
+    .nn-header.is-menu-open {
+      padding-top: 0.2rem;
     }
 
     .nn-logo-link {
-      width: 4.8rem;
+      width: 4.2rem;
     }
 
     .nn-header-inner {
       grid-template-columns: auto 1fr auto;
-      min-height: 4.7rem;
+      min-height: 4.9rem;
+    }
+
+    .nn-logo {
+      transform: scale(1.16);
     }
 
     .nn-cta {
@@ -1006,7 +1053,7 @@
 
     .nn-mobile-nav {
       width: min(100%, 22rem);
-      padding-top: 1rem;
+      padding-top: 0.25rem;
     }
 
     .nn-mobile-nav-link {
@@ -1020,8 +1067,9 @@
       padding: 2rem 0.45rem 2rem;
     }
 
-    .nn-hero-background {
-      object-position: 44% center;
+    .nn-hero-shell::before {
+      background-position: center 50%;
+      transform: scale(1.01, 1.22);
     }
 
     .nn-divider-label {
@@ -1164,10 +1212,6 @@
       justify-items: center;
       text-align: center;
       gap: 0.7rem;
-    }
-
-    .nn-footer-logo {
-      width: 2.1rem;
     }
 
     .nn-footer-inner > p {
