@@ -1221,8 +1221,11 @@
     }
 
     .nn-footer-links {
+      width: 100%;
       justify-content: center;
+      justify-self: center;
       gap: 0.8rem 1rem;
+      text-align: center;
     }
   }
 }
