@@ -15,16 +15,16 @@ import {
   Users,
 } from "lucide-react";
 
-import dishChana from "@/assets/dish-chana.jpg";
-import dishDahl from "@/assets/dish-dahl.jpg";
-import dishHyderabadiBiryani from "@/assets/dish-hyderabadi-biryani.jpg";
-import dishOnionBhajji from "@/assets/dish-onion-bhajji.jpg";
-import dishPaneerButterMasala from "@/assets/dish-paneer-butter-masala.jpg";
-import dishSamosa from "@/assets/dish-samosa.jpg";
-import heroBackgroundFull from "@/assets/hero-background-full.png";
-import logoMark from "@/assets/namaste-nima-logo-cropped.png";
-import storyPhotoOne from "@/assets/story-photo-one.jpg";
-import storyPhotoTwo from "@/assets/story-photo-two.jpg";
+import dishChana from "@/assets/dish-chana.webp";
+import dishDahl from "@/assets/dish-dahl.webp";
+import dishHyderabadiBiryani from "@/assets/dish-hyderabadi-biryani.webp";
+import dishOnionBhajji from "@/assets/dish-onion-bhajji.webp";
+import dishPaneerButterMasala from "@/assets/dish-paneer-butter-masala.webp";
+import dishSamosa from "@/assets/dish-samosa.webp";
+import heroBackgroundFull from "@/assets/hero-background-full.webp";
+import logoMark from "@/assets/namaste-nima-logo-cropped.webp";
+import storyPhotoOne from "@/assets/story-photo-one.webp";
+import storyPhotoTwo from "@/assets/story-photo-two.webp";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -198,7 +198,13 @@ function Header() {
       <header className={`nn-header ${isScrolled ? "is-scrolled" : ""} ${isMenuOpen ? "is-menu-open" : ""}`}>
         <div className="nn-shell nn-header-inner">
           <a href="#top" className="nn-logo-link" aria-label="Namaste Nima home">
-            <img src={logoMark} alt="Namaste Nima logo" className="nn-logo" />
+            <img
+              src={logoMark}
+              alt="Namaste Nima logo"
+              className="nn-logo"
+              decoding="async"
+              fetchPriority="high"
+            />
           </a>
 
           <nav className="nn-nav" aria-label="Primary">
@@ -337,7 +343,7 @@ function MenuSection() {
         <div className="nn-menu-grid">
           {DISHES.map((dish) => (
             <article key={dish.title} className="nn-dish-card">
-              <img src={dish.image} alt={dish.title} />
+              <img src={dish.image} alt={dish.title} loading="lazy" decoding="async" />
               <div className="nn-dish-body">
                 <h3>{dish.title}</h3>
                 <p>{dish.description}</p>
@@ -362,10 +368,15 @@ function StorySection() {
       <div className="nn-shell nn-story-grid">
         <div className="nn-story-collage">
           <div className="nn-story-photo nn-story-photo-large">
-            <img src={storyPhotoOne} alt="Fresh snacks being dipped into chutney" />
+            <img
+              src={storyPhotoOne}
+              alt="Fresh snacks being dipped into chutney"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div className="nn-story-photo nn-story-photo-small">
-            <img src={storyPhotoTwo} alt="Chaat plated for a shared table" />
+            <img src={storyPhotoTwo} alt="Chaat plated for a shared table" loading="lazy" decoding="async" />
           </div>
         </div>
 
