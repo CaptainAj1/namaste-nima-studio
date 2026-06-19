@@ -1068,8 +1068,10 @@
     }
 
     .nn-hero-shell::before {
-      background-position: center 50%;
-      transform: scale(1.01, 1.22);
+      top: 0;
+      background-position: center top;
+      background-size: cover;
+      transform: none;
     }
 
     .nn-divider-label {
